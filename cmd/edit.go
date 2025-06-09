@@ -251,7 +251,7 @@ func init() {
 func run() {
 	if len(rename) == 0 && len(deletes) == 0 && trimStart == "" &&
 		trimEnd == "" && len(topics) == 0 && shiftPublish == "" &&
-		shiftLog == "" && !usePubTime {
+		shiftLog == "" && !usePubTime && compression == "" {
 		logging.GetLogger().Info("Nothing to do")
 		os.Exit(0)
 	}
@@ -450,6 +450,35 @@ func conversion(filePath string) error {
 		return err
 	}
 
+	// Perform trimming if specified
+	var trimStartTime, trimEndTime int64
+
+	if trimStart != "" {
+		trimStartTime, err = utils.TryParseTimestamp(trimStart)
+		if err != nil {
+			return fmt.Errorf("invalid trim start time: %s", trimStart)
+		}
+		if trimStartTime < int64(msgLogStart) {
+			return fmt.Errorf("trim start time [%d] is before message start time [%d]", trimStartTime, msgLogStart)
+		}
+
+		if trimStartTime >= int64(msgLogEnd) {
+			return fmt.Errorf("trim start time [%d] is after message end time [%d]", trimStartTime, msgLogEnd)
+		}
+	}
+
+	if trimEnd != "" {
+		trimEndTime, err = utils.TryParseTimestamp(trimEnd)
+		if err != nil {
+			return fmt.Errorf("invalid trim end time: %s", trimEnd)
+		}
+		if trimEndTime > int64(msgLogEnd) {
+			logging.GetLogger().Warn(fmt.Sprintf("trim end time [%d] is after message end time [%d]", trimStartTime, msgLogEnd))
+		}
+	} else {
+		trimEndTime = int64(msgLogEnd)
+	}
+
 	for {
 		schema, channel, msg, err := msgs.NextInto(&mcap.Message{})
 		if err != nil {
@@ -457,29 +486,6 @@ func conversion(filePath string) error {
 				break
 			}
 			return fmt.Errorf("failed to iterate messages: %s", err)
-		}
-
-		// Perform trimming if specified
-		var trimStartTime, trimEndTime int64
-
-		if trimStart != "" {
-			trimStartTime, err = utils.TryParseTimestamp(trimStart)
-			if err != nil {
-				return fmt.Errorf("invalid trim start time: %s", trimStart)
-			}
-			if trimStartTime < int64(msgLogStart) {
-				return fmt.Errorf("trim start time [%d] is before message start time [%d]", trimStartTime, msgLogStart)
-			}
-		}
-
-		if trimEnd != "" {
-			trimEndTime, err = utils.TryParseTimestamp(trimEnd)
-			if err != nil {
-				return fmt.Errorf("invalid trim end time: %s", trimEnd)
-			}
-			if trimEndTime > int64(msgLogEnd) {
-				logging.GetLogger().Warn(fmt.Sprintf("trim end time [%d] is after message end time [%d]", trimStartTime, msgLogEnd))
-			}
 		}
 
 		if trimStartTime != 0 {
