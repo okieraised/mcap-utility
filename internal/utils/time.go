@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -16,6 +17,10 @@ var timestampLayouts = []string{
 }
 
 func TryParseTimestamp(input string) (int64, error) {
+	i, err := strconv.ParseInt(input, 10, 64)
+	if err == nil {
+		return i, nil
+	}
 	for _, layout := range timestampLayouts {
 		if t, err := time.Parse(layout, input); err == nil {
 			return t.UnixNano(), nil

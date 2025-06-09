@@ -136,7 +136,7 @@ func init() {
 			"s",
 			"",
 			fmt.Sprintf(
-				"Timestamp at which to start trimming (%s) file",
+				"Timestamp at which to start trimming (%s) file (prefer RFC3339 or unixnano format, e.g. 2006-01-02T15:04:05+07:00)",
 				constants.MCAPFIleExtension,
 			),
 		)
@@ -149,7 +149,7 @@ func init() {
 			"e",
 			"",
 			fmt.Sprintf(
-				"Timestamp at which to end trimming (%s) file",
+				"Timestamp at which to end trimming (%s) file (prefer RFC3339 or unixnano format, e.g. 2006-01-02T15:04:05+07:00))",
 				constants.MCAPFIleExtension,
 			),
 		)
