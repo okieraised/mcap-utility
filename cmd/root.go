@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"mcap-cli/internal/constants"
+	"mcap-utility/cmd/edit"
+	"mcap-utility/cmd/info"
+	"mcap-utility/internal/constants"
 )
 
 var (
@@ -27,6 +29,6 @@ func Execute() error {
 }
 
 func init() {
-	rootCmd.AddCommand(infoCmd)
-	rootCmd.AddCommand(editCmd)
+	rootCmd.AddCommand(info.InfoCmd)
+	rootCmd.AddCommand(edit.EditCmd)
 }

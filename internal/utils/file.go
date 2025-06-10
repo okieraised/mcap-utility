@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"mcap-cli/internal/constants"
+	"mcap-utility/internal/constants"
 	"os"
 	"path/filepath"
 	"strings"

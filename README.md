@@ -19,7 +19,7 @@ A command-line utility to edit, trim, rename, shift, and compress `.mcap` files 
 ## Installation
 - For current machine
     ```bash
-    go build -o mcap-cli .
+    go build -o mcap-utility .
     ```
 - For all OSes:
     ```shell
@@ -29,7 +29,7 @@ A command-line utility to edit, trim, rename, shift, and compress `.mcap` files 
 ## Usage
 
 ```shell
-mcap-cli edit -i <input> -o <output> [flags]
+mcap-utility edit -i <input> -o <output> [flags]
 ```
 
 ### Required Flags
@@ -73,25 +73,25 @@ mcap-cli edit -i <input> -o <output> [flags]
 ### Rename a topic and apply zstd compression
 
 ```bash
-mcap-cli edit -i input.mcap -o output_dir --rename /old_topic=/new_topic --compression zstd
+mcap-utility edit -i input.mcap -o output_dir --rename /old_topic=/new_topic --compression zstd
 ```
 
 ### Trim messages between two timestamps
 
 ```bash
-mcap-cli edit -i logs/ -o trimmed_logs/ --trim-start "2024-01-01T00:00:00Z" --trim-end "2024-01-01T01:00:00Z"
+mcap-utility edit -i logs/ -o trimmed_logs/ --trim-start "2024-01-01T00:00:00Z" --trim-end "2024-01-01T01:00:00Z"
 ```
 
 ### Shift all publish times by +10 seconds
 
 ```bash
-mcap-cli edit -i session.mcap -o shifted/ --shift-pub 10s
+mcap-utility edit -i session.mcap -o shifted/ --shift-pub 10s
 ```
 
 ### Delete specific topics
 
 ```bash
-mcap-cli edit -i record.mcap -o clean/ --delete /debug /logs
+mcap-utility edit -i record.mcap -o clean/ --delete /debug /logs
 ```
 
 ## Notes
